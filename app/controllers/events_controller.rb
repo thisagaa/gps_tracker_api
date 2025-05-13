@@ -9,6 +9,10 @@ class EventsController < ApplicationController
 
     rescue ActionController::ParameterMissing
         render json: { error: "Invalid request format" }, status: :bad_request
+    rescue ActiveRecord::NotNullViolation
+        render json: { error: "Missing required fields" }, status: :unprocessable_entity
+    rescue ActiveRecord::RecordInvalid => e # Returns a clean JSON error if event.save fails
+        render json: { error: e.message }, status: :unprocessable_entity
     end
 
     def show # GET EVENT/uuid
