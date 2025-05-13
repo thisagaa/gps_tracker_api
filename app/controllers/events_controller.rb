@@ -11,6 +11,21 @@ class EventsController < ApplicationController
         render json: { error: "Invalid request format" }, status: :bad_request
     end
 
+    def show # GET EVENT/uuid
+        event = Event.find_by(uuid: params[:id])
+
+        if event
+            render json: event
+        else
+            render json: { error: "Event not found" }, status: :not_found
+        end
+    end
+
+    def index
+        event = Event.all
+        render json: event
+    end
+
     private
     def event_params
         params.require(:event).permit(
