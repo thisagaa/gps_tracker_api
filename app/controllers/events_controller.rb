@@ -1,6 +1,12 @@
 class EventsController < ApplicationController
     def create # POST endpoint
         event = Event.new(event_params)
+
+        if Event.exists?(uuid: event.uuid)
+            render json: { error: "UUID already exists, use a new one" }, status: :unprocessable_entity
+            return
+        end
+
         if event.save
             render json: event, status: :ok
         else
